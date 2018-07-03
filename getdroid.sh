@@ -152,7 +152,7 @@ nc -lvp $default_port2
 }
 
 start() {
-
+chmod +x tools/*
 default_port=$(seq 1111 4444 | sort -R | head -n1)
 default_port2=$(seq 1111 4444 | sort -R | head -n1)
 default_port3=$(seq 1111 4444 | sort -R | head -n1)
